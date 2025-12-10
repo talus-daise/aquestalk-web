@@ -65,19 +65,16 @@ const response = await fetch('http://localhost:3000/synth', {
 const audio = await response.arrayBuffer();
 ```
 
-### (いらないと思うけど)Cコンパイラ
-```bash
-sudo apt update
-sudo apt install mingw-w64
-i686-w64-mingw32-gcc synth.c -o synth.exe
-```
-
-注意：AquesTalkライブラリは32bitDLLなのでコンパイラも32bitじゃないと読み取れなくて動きません。<s>何回詰まったことか</s>
-
 ## ライセンス
 
 本プログラムでは旧ver.のAquesTalkライブラリを使用しています。
 
 最新版とは異なり、商用、非商用問わず無償で利用できます。
 
-「AquesTalk」フォルダ配下のDLL等の著作権はアクエスト社に帰属します。http://www.a-quest.com/aquestalk
+また、「AqLicence.txt」に使用許諾契約書が記載されていますので、必ずご確認ください。
+
+## リンク
+
+- [AquesTalk公式サイト](https://www.a-quest.com/products/aquestalk.html)
+- [AquesTalkライセンス情報](https://www.a-quest.com/products/aquestalk_license.html)
+- [aquestalk-server](https://github.com/Lqm1/aquestalk-server/)

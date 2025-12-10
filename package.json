@@ -1,0 +1,28 @@
+{
+  "name": "aquestalk-web",
+  "version": "1.0.0",
+  "main": "serever.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/talus-daise/aquestalk-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/talus-daise/aquestalk-web/issues"
+  },
+  "homepage": "https://github.com/talus-daise/aquestalk-web#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "ffi-napi": "^4.0.3",
+    "iconv-lite": "^0.7.0",
+    "kuromoji": "^0.1.2",
+    "ref-napi": "^3.0.3"
+  },
+  "description": ""
+}

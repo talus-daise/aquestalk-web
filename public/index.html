@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>AquesTalk Web</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #020617;
+            --fg: #e5e7eb;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-weak: #0ea5e9;
+            --border: #1e293b;
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(1200px 600px at 20% -10%, #1e293b, transparent),
+                radial-gradient(1000px 600px at 120% 20%, #0c4a6e, transparent),
+                var(--bg);
+            color: var(--fg);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+            display: grid;
+            place-items: center;
+        }
+
+        .card {
+            width: min(720px, 94vw);
+            background: linear-gradient(180deg, #020617, #020617cc);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .6);
+            padding: 28px;
+            display: grid;
+            gap: 20px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            margin: 0;
+            letter-spacing: .02em;
+        }
+
+        header span {
+            color: var(--muted);
+            font-size: .85rem;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 110px;
+            resize: vertical;
+            background: #020617;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--fg);
+            padding: 12px 14px;
+            font-size: 1rem;
+            line-height: 1.6;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .control {
+            background: #020617;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .control label {
+            font-size: .85rem;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        select,
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+        }
+
+        select {
+            background: #020617;
+            color: var(--fg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 8px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        button {
+            appearance: none;
+            border: none;
+            border-radius: 999px;
+            padding: 12px 20px;
+            font-size: .95rem;
+            cursor: pointer;
+            color: #020617;
+            background: linear-gradient(135deg, var(--accent), var(--accent-weak));
+            box-shadow: 0 6px 20px rgba(56, 189, 248, .35);
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 26px rgba(56, 189, 248, .45);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        audio {
+            width: 100%;
+            background: #020617;
+            border-radius: 10px;
+        }
+
+        footer {
+            font-size: .75rem;
+            color: var(--muted);
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <header>
+            <h1>AquesTalk Web</h1>
+            <span>Node.js / AquesTalk</span>
+        </header>
+
+        <textarea id="t">こんにちわ</textarea>
+
+        <div class="controls">
+            <div class="control">
+                <label>
+                    音声
+                </label>
+                <select id="voice">
+                    <option value="f1">女声1</option>
+                    <option value="f2">女声2</option>
+                    <option value="m1">男声1</option>
+                    <option value="m2">男声2</option>
+                    <option value="r1">ロボット1</option>
+                    <option value="imd1">imd1</option>
+                    <option value="jgr">jgr</option>
+                    <option value="dvd">dvd</option>
+                </select>
+            </div>
+
+            <div class="control">
+                <label>
+                    速さ
+                    <span id="speedVal" contenteditable="true">100</span>
+                </label>
+                <input type="range" id="speed" min="50" max="200" value="100">
+            </div>
+
+            <div class="control">
+                <label>
+                    音程
+                    <span id="pitchVal" contenteditable="true">100</span>
+                </label>
+                <input type="range" id="pitch" min="50" max="200" value="100">
+            </div>
+        </div>
+
+        <div class="actions">
+            <button onclick="play()">▶ 再生</button>
+        </div>
+
+        <div class="actions">
+            <button onclick="download()">⬇ ダウンロード</button>
+        </div>
+
+        <audio id="a" controls></audio>
+
+        <footer>
+            Local synthesis / no network voice
+        </footer>
+    </div>
+
+    <script>
+        const speed = document.getElementById('speed');
+        const pitch = document.getElementById('pitch');
+        const speedVal = document.getElementById('speedVal');
+        const pitchVal = document.getElementById('pitchVal');
+
+        speed.oninput = () => speedVal.textContent = speed.value;
+        pitch.oninput = () => pitchVal.textContent = pitch.value;
+
+        // 共通の処理関数
+        function filterInput(span, range) {
+            const setCaretToEnd = () => {
+                const rangeObj = document.createRange();
+                rangeObj.selectNodeContents(span);
+                rangeObj.collapse(false); // false = 末尾に
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(rangeObj);
+            };
+
+            span.addEventListener('input', () => {
+                // 改行や数字以外を削除
+                span.textContent = span.textContent.replace(/[^\d]/g, '');
+                let v = parseInt(span.textContent);
+                if (isNaN(v)) v = 100;
+                range.value = v;
+
+                // カーソルを末尾に
+                setCaretToEnd();
+            });
+
+            // 貼り付け時もフィルター
+            span.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const text = (e.clipboardData || window.clipboardData).getData('text');
+                const filtered = text.replace(/[^\d]/g, '');
+                document.execCommand('insertText', false, filtered);
+
+                // カーソルを末尾に
+                setCaretToEnd();
+            });
+        }
+
+        filterInput(speedVal, speed);
+        filterInput(pitchVal, pitch);
+
+        async function play() {
+            const body = {
+                text: t.value,
+                voice: voice.value,
+                speed: +speed.value,
+                pitch: +pitch.value
+            };
+
+            const r = await fetch('/synth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            a.src = URL.createObjectURL(await r.blob());
+            a.play();
+        }
+
+        async function download() {
+            const filename = `${new Date().toISOString().slice(0,19).replace(/:/g, "-").replace("T", "_")}.wav`
+
+            if (!filename) {
+                return;
+            }
+
+            const body = {
+                text: t.value,
+                voice: voice.value,
+                speed: +speed.value,
+                pitch: +pitch.value
+            };
+
+            const r = await fetch('/synth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            const blob = await r.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+
+</body>
+
+</html>
